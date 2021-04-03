@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" >
+        <link rel="stylesheet" href="/css/default.css">
+        <link rel="icon" href="/favicon.ico"/>
+        <title>体温報告システム</title>
+    </head>
+    <body>
+        <h1>体温報告システム</h1>
+        <nav id=navbar>
+            <ul id=navbar style="padding: 0%;">
+                <li><a href="/chpass">パスワード変更</a></li>
+                <li><a href="/logout">ログアウト</a></li>
+            </ul>
+        </nav>
+        <p>{{userid}}さん，体温報告を受領しました．</p>
+        <p>送信時刻 {{desired_time}}</p>
+	<p>体温:{{body_temp}}<br>
+	体調:{{condtext}}<br>
+    </body>
+</html>

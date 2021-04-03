@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" >
+        <link rel="stylesheet" href="/css/default.css">
+        <link rel="icon" href="/favicon.ico"/>
+        <title>浴室予約システム</title>
+    </head>
+    <body>
+        <h1>浴室予約システム</h1>
+        <nav id=navbar>
+            <ul>
+                <li><a href="/reserve">予約画面</a></li>
+                {% if lottery_date %}
+                    <li><a href="/lottery_game">抽選</a></li>
+                {% endif %}
+                <li><a href="/logout">ログアウト</a></li>
+            </ul>
+        </nav>
+        <p>作成中の機能です．実装完了まで今しばらくお待ちください．</p>
+    </body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" >
+        <link rel="stylesheet" href="/css/default.css">
+        <link rel="icon" href="/favicon.ico"/>
+        <title>体温報告システム</title>
+    </head>
+    <body>
+        <h1>体温報告システム</h1>
+        <nav id=navbar>
+            <ul class="navbar">
+                <li><a href="/chpass">パスワード変更</a></li>
+                <li><a href="/logout">ログアウト</a></li>
+            </ul>
+        </nav>
+	<p>ようこそ，{{userid}}さん．<br>{{today}}の健康状態報告を実施します．</p>
+	 <form action="/report_register" method="POST">
+		 <p>体温を入力してください<br></p>
+		 <input type=tel name="body_temp" required><br>
+		 <p>体調に異常はありますか?</p>
+		 <label><input type=radio name="condition" value=0 required>異常なし</label><br>
+		 <label><input type=radio name="condition" value=1>異常あり</label><br>
+		 <br>
+                 <input type="submit" value="報告">
+            </form>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" >
+        <link rel="stylesheet" href="/css/default.css">
+        <link rel="icon" href="/favicon.ico"/>
+        <title>体温報告システム</title>
+    </head>
+    <body>
+        <h1>体温報告システム</h1>
+        <nav id=navbar>
+            <ul class="navbar">
+                <li><a href="/chpass">パスワード変更</a></li>
+                <li><a href="/logout">ログアウト</a></li>
+            </ul>
+        </nav>
+	<p>ようこそ，{{user}}さん．<br>{{today}}の健康状態報告の確認を行います．</p>
+	{% for i in range(0,uid_len) %}
+	    {% if condition[i]=="1" %}
+	    <p><b><font color="red">{{dormitory_type[i]}}棟{{room[i]}}号室 {{userid[i]}}が体調不良のようです.</p></font></b>
+	    {% endif %}
+	    {% if temp[i]|float >=37.5 %}
+	    <p><b><font color="red">{{dormitory_type[i]}}棟{{room[i]}}号室 {{userid[i]}}の体温が37.5℃を超えています.</b></p></font>
+	    {% endif %}
+	{% endfor %}
+
+	
+	<table border="1">
+	    <thead>
+		<tr>
+		    <th>報告者</th>
+		    <th>寮棟</th>
+		    <th>部屋番号</th>
+		    <th>体温</th>
+		    <th>体調</th>
+		    <th>報告日時</th>
+		</tr>
+	    </thead>
+	    <tbody>
+	        {% for i in range(0,uid_len) %}
+		<tr>
+		    <td>{{userid[i]}}</td>
+		    <td>{{dormitory_type[i]}}</td>
+		    <td>{{room[i]}}</td>
+		    <td>{{temp[i]}}</td>
+		    <td>{{condition[i]}}</td>
+		    <td>{{date[i]}}</td>
+		</tr>
+		{% endfor %}
+	    </tbody>
+	</table>
+    </body>
+</html>
+		  

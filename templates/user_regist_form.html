@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" >
+        <link rel="stylesheet" href="/css/default.css">
+        <link rel="icon" href="/favicon.ico"/>
+        <title>体温報告システム</title>
+    </head>
+    <body>
+        <div>
+            <h1>体温報告システム</h1>
+            <h2>ユーザ新規登録</h2>
+        </div>
+        <div>
+            {% if Error == 1: %}
+            <p id=error>学籍番号が有効ではありません．</p>
+            {% elif Error == 2: %}
+            <p id=error>パスワードがすでに登録されています．</p>
+            {% endif %}
+            <p>
+                ユーザの新規登録を行います．<br>
+                学籍番号(e16xxxやg20xxxのように入力)とパスワードを入力してください．<br>
+                ただし，セキュリティが万全である保証ができないので，他サービス等で使用しているパスワードの流用は避けてください．
+            </p>
+            <form action="/user_register" method="POST">
+                <input type="text" name="userid" placeholder="学籍番号"/><br>
+                <input type="password" name="password" placeholder="パスワード"/><br>
+                <input type="submit" value="登録"/>
+            </form>
+        </div>        
+    </body>
+</html>
