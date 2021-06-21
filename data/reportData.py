@@ -19,7 +19,7 @@ class ReportData():
         self.str_reportTime     = datetime.datetime.strptime(self.reportTime.strftime("%H:%M"),"%H:%M")
         self.str_reportDateTime = self.reportTime.strftime("%Y-%m-%d %H:%M:%S")
 
-    def report(self): # application.py と関数が重複している?
+    def report(self):
         cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+password)
         cursor = cnxn.cursor()
         sql="INSERT INTO report VALUES(?,?,?,?,?,?)"
