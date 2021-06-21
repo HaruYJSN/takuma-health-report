@@ -1,6 +1,6 @@
 import datetime
 import pyodbc
-from ..my_server_setting import server,database,username,password,driver
+from my_server_setting import server,database,username,password,driver
 
 class ReportData():
 
@@ -19,7 +19,7 @@ class ReportData():
         self.str_reportTime     = datetime.datetime.strptime(self.reportTime.strftime("%H:%M"),"%H:%M")
         self.str_reportDateTime = self.reportTime.strftime("%Y-%m-%d %H:%M:%S")
 
-    def report(self):
+    def report(self): # application.py と関数が重複している?
         cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+password)
         cursor = cnxn.cursor()
         sql="INSERT INTO report VALUES(?,?,?,?,?,?)"
