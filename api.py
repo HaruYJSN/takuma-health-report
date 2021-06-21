@@ -19,7 +19,7 @@ HTTP_OK              = 201
 HTTP_UNAUTHORIZED    = 401
 HTTP_INVALID_REQUEST = 400
 
-@app.route('/report',methods=['POST'])
+@app.route('/api/report',methods=['POST'])
 def reportApi():
     # レポートデータの読み込み
     report = ReportData(
