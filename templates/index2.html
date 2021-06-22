@@ -20,14 +20,14 @@
             {% elif Error == 3 %}
             <p id=error>不正な操作が確認されました．最初からやり直してください．</p>
             {% elif Error == 4 %}
-            <p id=error>ユーザーIDが誤っています．先頭に英字をつけて入力しているか確認してください．</p>
+            <p id=error>ユーザーIDが誤っています．観察者用IDを使用してください．</p>
             {% elif Error == 5 %}
             <p id=error>すでに報告済みです．</p>
             {% endif %}
             <form action="/checker" method="POST">
                 <input type="text" name="userid" placeholder="ユーザID" required/><br>
                 <input type="password" name="password" placeholder="パスワード" required/><br>
-                <input type="submit" value="ログイン"/>
+                <input type="submit"name="use" value="ログイン"/>
             </form>
         </div>
         <div>

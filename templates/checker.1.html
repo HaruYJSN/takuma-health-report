@@ -4,15 +4,34 @@
         <meta name="viewport" content="width=device-width" >
         <link rel="stylesheet" href="/css/default.css">
         <link rel="icon" href="/favicon.ico"/>
-        <title>体温報告システム</title>
+        <title>健康状態報告システム</title>
     </head>
     <body>
-        <h1>体温報告システム</h1>
+        <h1>健康状態報告システム</h1>
         <nav id=navbar>
             <ul class="navbar">
+		<li><a href="/checkerdl">csv取得</a></li>
+		<li><a href="/checker_nocheck">未提出者確認</a></li>
                 <li><a href="/chpass">パスワード変更</a></li>
                 <li><a href="/logout">ログアウト</a></li>
             </ul>
+	    <form action="/checker_chdate" method="POST">
+	    <select name="date-select">
+		{% for i in range(0,date_len,2) %}
+		{% if i+1>date_len %}
+		    None
+		{% else %}
+		    {% if date_len-i-2 == sel %}
+		        <option value={{date_len-i-2}} selected>{{datelist[date_len-i-2]+"～"+datelist[date_len-i-1]}}</option>
+			{% else %}
+		        <option value={{date_len-i-2}}>{{datelist[date_len-i-2]+"～"+datelist[date_len-i-1]}}</option>
+			{% endif %}
+		{% endif %}
+		{% endfor %}
+	    </select>
+                <input type="submit" value="移動"/>
+            </form>
+
         </nav>
 	<p>ようこそ，{{user}}さん．<br>{{today}}の健康状態報告の確認を行います．</p>
 	{% for i in range(0,uid_len) %}

@@ -10,19 +10,31 @@
         <h1>健康状態報告システム</h1>
         <nav id=navbar>
             <ul class="navbar">
+		<li><a href="/nocheckerdl">csv取得</a></li>
                 <li><a href="/chpass">パスワード変更</a></li>
                 <li><a href="/logout">ログアウト</a></li>
             </ul>
         </nav>
-	<p>ようこそ，{{userid}}さん．<br>{{today}}の健康状態報告を実施します．</p>
-	 <form action="/report_register" method="POST">
-		 <p>体温を入力してください<br></p>
-		 <input type=text name="body_temp" autocomplete="off" required><br>
-		 <p>体調に異常はありますか?</p>
-		 <label><input type=radio name="condition" value=0 required>異常なし</label><br>
-		 <label><input type=radio name="condition" value=1>異常あり</label><br>
-		 <br>
-                 <input type="submit" value="報告">
-            </form>
+	<p>ようこそ，{{user}}さん．<br>{{today}}の健康状態報告未提出者の確認を行います．</p>
+	
+	<table border="1">
+	    <thead>
+		<tr>
+		    <th>未報告者</th>
+		    <th>寮棟</th>
+		    <th>部屋番号</th>
+		</tr>
+	    </thead>
+	    <tbody>
+	        {% for i in range(0,uid_len) %}
+		<tr>
+		    <td>{{userid[i]}}</td>
+		    <td>{{dormitory_type[i]}}</td>
+		    <td>{{room[i]}}</td>
+		</tr>
+		{% endfor %}
+	    </tbody>
+	</table>
     </body>
 </html>
+		  
