@@ -77,7 +77,7 @@ def daychange():
         reportabletime="6:30~12:00,16:00~20:15"
         print("今日は休日です")
     else:
-        reportable=[str(today)+"06:30:00",str(today)+"08:30:00",str(today)+"16:00:00",str(today)+"22:15:00"]
+        reportable=[str(today)+"06:30:00",str(today)+"08:30:00",str(today)+"16:00:00",str(today)+"20:15:00"]
         reportabletime="06:30~08:30,16:00~20:15"
         print("今日は平日です")
 
