@@ -14,6 +14,9 @@ app.secret_key=str(random.randrange(999999999999999))
 app.jinja_env.add_extension("jinja2.ext.loopcontrols")
 app.permant_session_lifetime =datetime.timedelta(minutes=20)
 tz_jst = datetime.timezone(datetime.timedelta(hours=9))
+# APIの読み込み
+import api
+app.register_blueprint(api.app)
 # favicon設定
 @app.route('/favicon.ico')
 def favicon():
