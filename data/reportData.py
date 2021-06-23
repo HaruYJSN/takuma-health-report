@@ -12,7 +12,7 @@ class ReportData():
         self.roomNumber     = roomNumber
         self.bodyTemp       = bodyTemp
         self.condition      = condition
-        self.genDateTimeStr
+        self.genDateTimeStr()
     
     def genDateTimeStr(self):
         self.str_reportDate     = self.reportTime.strftime("%Y_%m_%d ")
