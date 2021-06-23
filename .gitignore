@@ -1,2 +1,4 @@
 .vscode
 my_server_setting.py
+__pychache__/
+data/temp/
