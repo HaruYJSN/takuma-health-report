@@ -27,7 +27,7 @@ def favicon():
 def default_css():
     return send_file("templates/static/css/default.css")
 # システム開始日←本番運用開始日を登録すること
-sysstart=datetime.datetime(2021,4,10)
+sysstart=datetime.datetime(2021,7,3)
 # 変数定義
 now = datetime.datetime.now()
 today = now.strftime("%Y-%m-%d ")
