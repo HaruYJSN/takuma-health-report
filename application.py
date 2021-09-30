@@ -27,7 +27,7 @@ def favicon():
 def default_css():
     return send_file("templates/static/css/default.css")
 # システム開始日←本番運用開始日を登録すること
-sysstart=datetime.datetime(2021,7,3)
+sysstart=datetime.datetime(2021,7,2)
 # 変数定義
 now = datetime.datetime.now()
 today = now.strftime("%Y-%m-%d ")
@@ -366,7 +366,7 @@ def check():
              return render_template("index2.html",Error=4)
          elif result[0] != userpassword:
              return render_template("index2.html",Error=2)
-         if userid=="btcheck":
+         if userid=="btcheck" or "call":
              # 時間帯制御
              if nowtime<=reportable[0]:
                  i=0
@@ -382,7 +382,7 @@ def check():
 
              # 表に表示する情報をDBから取得
              #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
-             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY room,dormitory_type "
+             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
              reqdate=request.form.get('date-select')
              print(reqdate)
 #             if reqdate == None:
@@ -448,7 +448,7 @@ def checkerdl():
      if session['login_flag']:
          userid = session['userid']
          print(request)
-         if userid=="btcheck":
+         if userid=="btcheck" or "call":
              return send_file("data/temp/report.csv", as_attachment = True, attachment_filename = "data/temp/report.csv", mimetype = "text/csv")
 
 @app.route("/checker_chdate",methods=["GET","POST"])
@@ -462,12 +462,14 @@ def checker_chdate():
      if session['login_flag']:
          userid = session['userid']
          print(request)
-         if userid=="btcheck":
+         if userid=="btcheck" or "call":
              # 表に表示する情報をDBから取得
              #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
-             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY room,dormitory_type "
-             reqdate=request.form.get('date-select')
-             print(reqdate)
+             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
+             reqdate=int(len(datelist))-2
+             if reqdate != int(len(datelist))-2:
+                reqdate=request.form.get('date-select')
+                print(reqdate)
              cursor.execute(sql,datelist[int(reqdate)],datelist[int(reqdate)+1])
              print(datelist[int(reqdate)])
              print(datelist[int(reqdate)+1])
@@ -528,7 +530,7 @@ def checker_nocheck():
      if session['login_flag']:
          userid = session['userid']
          print(request)
-         if userid=="btcheck":
+         if userid=="btcheck" or "call":
              # 時間帯制御
              if nowtime<=reportable[0]:
                  i=0
@@ -542,9 +544,9 @@ def checker_nocheck():
                  i=2
              print(i)
              # 最新の報告状況を取得
-             sql="SELECT userid,dormitory_type,room FROM report WHERE date BETWEEN ? AND ? ORDER BY room,dormitory_type "
+             sql="SELECT userid,dormitory_type,room FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
              # 名簿情報を取得
-             sql1="SELECT userid,dormitory_type,room FROM users ORDER BY room,dormitory_type "
+             sql1="SELECT userid,dormitory_type,room FROM users ORDER BY dormitory_type,room "
              cursor.execute(sql,reportable[i],reportable[i+1])
              result= cursor.fetchall()
              cursor.execute(sql1)
@@ -563,7 +565,7 @@ def checker_nocheck():
              nocheck=list()
              #nocheck=["" for j in range(0,len(nocheck_l))]
              # 未提出者のIDから部屋番号,寮を取得
-             sql="SELECT userid,dormitory_type,room FROM users WHERE userid= ? ORDER BY room,dormitory_type "
+             sql="SELECT userid,dormitory_type,room FROM users WHERE userid= ? ORDER BY dormitory_type,room "
              for j in range(0,len(nocheck_l)):
                 cursor.execute(sql,nocheck_l[j])
                 nocheck=nocheck+cursor.fetchall()
@@ -609,6 +611,9 @@ def checker_nocheck():
                     #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
                     writer.writerow([uid[j],dorm[j],droom[j]])
                 use = None
+             #返却処理
+             session['userid']=userid
+             session['login_flag']=True
              print(nocheck)
              return render_template("checker.2.html",today=now.strftime("%m/%d") ,userid=uid, dormitory_type=dorm, room=droom ,user=userid, uid_len=len(uid))
 @app.route("/nocheckerdl",methods=["GET","POST"])
@@ -622,8 +627,8 @@ def nocheckerdl():
      if session['login_flag']:
          userid = session['userid']
          print(request)
-         if userid=="btcheck":
+         if userid=="btcheck" or "call":
              return send_file("data/temp/noreport.csv", as_attachment = True, attachment_filename = "data/temp/noreport.csv", mimetype = "text/csv")
 if __name__ =="__main__":
-    app.run(debug=False,host="0.0.0.0",port=5000,threaded=True)
+    app.run(debug=True,host="0.0.0.0",port=5000,threaded=True)
 
