@@ -362,6 +362,8 @@ def check():
              i+=1
          if userid == "" or userpassword == "":
              return render_template("index2.html",Error=1)
+         elif userid != "btcheck" or "call":
+             return render_template("index2.html",Error=4)
          elif result == None:
              return render_template("index2.html",Error=4)
          elif result[0] != userpassword:
