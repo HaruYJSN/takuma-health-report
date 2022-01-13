@@ -17,6 +17,8 @@ tz_jst = datetime.timezone(datetime.timedelta(hours=9))
 # APIの読み込み
 import api
 app.register_blueprint(api.app)
+
+reqdate=0
 # favicon設定
 @app.route('/favicon.ico')
 def favicon():
@@ -27,7 +29,7 @@ def favicon():
 def default_css():
     return send_file("templates/static/css/default.css")
 # システム開始日←本番運用開始日を登録すること
-sysstart=datetime.datetime(2021,7,2)
+sysstart=datetime.datetime(2022,1,1)
 # 変数定義
 now = datetime.datetime.now()
 today = now.strftime("%Y-%m-%d ")
@@ -362,13 +364,13 @@ def check():
              i+=1
          if userid == "" or userpassword == "":
              return render_template("index2.html",Error=1)
-         elif userid != "btcheck" or "call":
+         elif userid != "btcheck" and userid != "call":
              return render_template("index2.html",Error=4)
          elif result == None:
              return render_template("index2.html",Error=4)
          elif result[0] != userpassword:
              return render_template("index2.html",Error=2)
-         if userid=="btcheck" or "call":
+         if userid=="btcheck" or userid=="call":
              # 時間帯制御
              if nowtime<=reportable[0]:
                  i=0
@@ -462,16 +464,93 @@ def checker_chdate():
      cursor=cnxn.cursor()
      # ユーザID取得
      if session['login_flag']:
+         global reqdate
          userid = session['userid']
          print(request)
          if userid=="btcheck" or "call":
              # 表に表示する情報をDBから取得
              #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
              sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
-             reqdate=int(len(datelist))-2
+             print("hogenyan"+str(request.form.get('date-select')))
              if reqdate != int(len(datelist))-2:
                 reqdate=request.form.get('date-select')
                 print(reqdate)
+             else:
+                 reqdate=int(len(datelist))-2
+            #  if reqdate ==None:
+            #      reqdate=int(len(datelist))-2
+             cursor.execute(sql,datelist[int(reqdate)],datelist[int(reqdate)+1])
+             print(datelist[int(reqdate)])
+             print(datelist[int(reqdate)+1])
+             result= cursor.fetchall()
+             print(result)
+             j=0
+             # 表に表示する情報を配列に格納
+             # 変数の宣言
+             uid = [""for j in range(0,len(result))]
+             dorm = [""for j in range(0,len(result))]
+             droom = [""for j in range(0,len(result))]
+             btemp = [""for j in range(0,len(result))]
+             cond = [""for j in range(0,len(result))]
+             dt = [""for j in range(0,len(result))]
+             taion = [float()for j in range(0,len(result))]
+             i=0
+             arr = [[0 for i in range(0,5)] for j in range(0,len(result))]
+             with open("data/temp/report.csv","w") as f:
+                 writer = csv.writer(f)
+                 writer.writerow(["userid","dormitory_type","room","temperature","condition","datetime"])
+             #use=request.form.get(use)
+             #print(airr)
+             # 格納処理
+             for j in range(0,len(result)):
+                uid[j]=str(result[j][0])
+                dorm[j]=str(result[j][1])
+                droom[j]=str(result[j][2])
+                btemp[j]=str(result[j][3])
+                cond[j]=str(result[j][4])
+                dt[j]=str(result[j][5])
+                taion[i]=float(result[j][3])
+                # 結果をcsvに
+                with open("data/temp/report.csv","a") as f:
+                    print("writing")
+                    writer = csv.writer(f)
+                    #if j==0:
+                    #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
+                    writer.writerow([uid[j],dorm[j],droom[j],btemp[j],cond[j],dt[j]])
+                use = None
+                print(result[j])
+             #返却処理
+             session['userid']=userid
+             session['login_flag']=True
+             print(len(datelist))
+
+             #rend=render_template("checker.html",desired_time=1,userid=userid)
+             rend=make_response(render_template("checker.1.html",today=datelist[int(reqdate)] ,userid=uid, date=dt, dormitory_type=dorm, room=droom, temp=btemp,taion=taion, condition=cond,uid_len=len(result),user=userid,datelist=datelist,date_len=int(len(datelist)),sel=int(reqdate)))
+             return rend
+@app.route("/checker_chdate2",methods=["GET","POST"])
+def checker_chdate2():
+     now = datetime.datetime.now()
+     today = now.strftime("%Y_%m_%d ")
+     nowtime = now.strftime("%Y-%m-%d %H:%M:%S")
+     cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+password)
+     cursor=cnxn.cursor()
+     # ユーザID取得
+     if session['login_flag']:
+         global reqdate
+         userid = session['userid']
+         print(request)
+         if userid=="btcheck" or "call":
+             # 表に表示する情報をDBから取得
+             #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
+             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
+             print("hogenyan"+str(request.form.get('date-select')))
+             if reqdate != int(len(datelist))-2:
+                reqdate=request.form.get('date-select')
+                print(reqdate)
+             else:
+                 reqdate=int(len(datelist))-2
+             if reqdate ==None:
+                 reqdate=int(len(datelist))-2
              cursor.execute(sql,datelist[int(reqdate)],datelist[int(reqdate)+1])
              print(datelist[int(reqdate)])
              print(datelist[int(reqdate)+1])
@@ -617,7 +696,7 @@ def checker_nocheck():
              session['userid']=userid
              session['login_flag']=True
              print(nocheck)
-             return render_template("checker.2.html",today=now.strftime("%m/%d") ,userid=uid, dormitory_type=dorm, room=droom ,user=userid, uid_len=len(uid))
+             return render_template("checker.2.html",today=now.strftime("%m/%d") ,userid=uid, dormitory_type=dorm, room=droom ,user=userid, uid_len=len(uid), datelist=datelist,date_len=int(len(datelist)),datelistdt=datelistdt)
 @app.route("/nocheckerdl",methods=["GET","POST"])
 def nocheckerdl():
      now = datetime.datetime.now()

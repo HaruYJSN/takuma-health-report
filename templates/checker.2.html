@@ -11,10 +11,26 @@
         <nav id=navbar>
             <ul class="navbar">
 		<li><a href="/nocheckerdl">csv取得</a></li>
-				<li><a href="/checker_chdate">報告者確認</a></li>
+				<li><a href="/checker_chdate2" action="/checker_chdate2" method="POST" name="date-select" value="0">報告者確認</a></li>
                 <li><a href="/chpass">パスワード変更</a></li>
                 <li><a href="/logout">ログアウト</a></li>
             </ul>
+			<form action="/checker_chdate" method="POST" hidden>
+				<select name="date-select">
+				{% for i in range(0,date_len,2) %}
+				{% if i+1>date_len %}
+					None
+				{% else %}
+					{% if date_len-i-2 == sel %}
+						<option value={{date_len-i-2}} selected>{{datelist[date_len-i-2]+"～"+datelist[date_len-i-1]}}</option>
+					{% else %}
+						<option value={{date_len-i-2}}>{{datelist[date_len-i-2]+"～"+datelist[date_len-i-1]}}</option>
+					{% endif %}
+				{% endif %}
+				{% endfor %}
+				</select>
+						<input type="submit" value="移動"/>
+					</form>
         </nav>
 	<p>ようこそ，{{user}}さん．<br>{{today}}の健康状態報告未提出者の確認を行います．</p>
 	
