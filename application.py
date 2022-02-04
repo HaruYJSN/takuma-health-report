@@ -142,7 +142,7 @@ def datelistadd():
 @app.route("/",methods=["GET","POST"])
 def hello():
     daychange()
-    print(reportable)
+    # print(reportable)
     now = datetime.datetime.now()
     today = now.strftime("%Y_%m_%d ")
     nowtime = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -202,14 +202,14 @@ def login_manager():
          # DBから報告済みか取得
          now = datetime.datetime.now(tz_jst)
          today =now.strftime("%Y-%m-%d ")
-         print(reportable)
+        #  print(reportable)
          i=0
          if reportable[0]<=nowtime<=reportable[1]:
              i=0
          elif reportable[2]<=nowtime<=reportable[3]:
              i=2
          else:
-             print(reportable)
+            #  print(reportable)
              return render_template("outofservice.html",reportable_date=str(reportable))
          # 報告状況の取得
         #sql = "SELECT date FROM reports WHERE userid = ? BETWEEN ? AND ?"
@@ -217,7 +217,7 @@ def login_manager():
          sql = "SELECT * FROM report WHERE userid=? AND date BETWEEN ? AND ?"
          print(i)
          cursor.execute(sql,userid,reportable[i],reportable[i+1])
-         print(reportable[i])
+        #  print(reportable[i])
          result = cursor.fetchone()
          print(result)
          if result == None:
@@ -543,12 +543,14 @@ def checker_chdate2():
              # 表に表示する情報をDBから取得
              #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
              sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
-             print("hogenyan"+str(request.form.get('date-select')))
-             if reqdate != int(len(datelist))-2:
-                reqdate=request.form.get('date-select')
-                print(reqdate)
-             else:
-                 reqdate=int(len(datelist))-2
+            #  print("hogenyan"+str(request.form.get('date-select')))
+             reqdate=request.form.get('date-select')
+             print
+            #  if reqdate != int(len(datelist))-2:
+            #     reqdate=request.form.get('date-select')
+            #     print(reqdate)
+            #  else:
+            #      reqdate=int(len(datelist))-2
              if reqdate ==None:
                  reqdate=int(len(datelist))-2
              cursor.execute(sql,datelist[int(reqdate)],datelist[int(reqdate)+1])
