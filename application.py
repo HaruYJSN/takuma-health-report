@@ -432,7 +432,7 @@ def check():
                     #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
                     writer.writerow([uid[j],dorm[j],droom[j],btemp[j],cond[j],dt[j]])
                 use = None
-                print(result[j])
+                # print(result[j])
              #返却処理
              session['userid']=userid
              session['login_flag']=True
@@ -483,7 +483,7 @@ def checker_chdate():
              print(datelist[int(reqdate)])
              print(datelist[int(reqdate)+1])
              result= cursor.fetchall()
-             print(result)
+            #  print(result)
              j=0
              # 表に表示する情報を配列に格納
              # 変数の宣言
@@ -512,13 +512,13 @@ def checker_chdate():
                 taion[i]=float(result[j][3])
                 # 結果をcsvに
                 with open("data/temp/report.csv","a") as f:
-                    print("writing")
+                    # print("writing")
                     writer = csv.writer(f)
                     #if j==0:
                     #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
                     writer.writerow([uid[j],dorm[j],droom[j],btemp[j],cond[j],dt[j]])
                 use = None
-                print(result[j])
+                # print(result[j])
              #返却処理
              session['userid']=userid
              session['login_flag']=True
@@ -590,7 +590,7 @@ def checker_chdate2():
                     #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
                     writer.writerow([uid[j],dorm[j],droom[j],btemp[j],cond[j],dt[j]])
                 use = None
-                print(result[j])
+                # print(result[j])
              #返却処理
              session['userid']=userid
              session['login_flag']=True
@@ -677,7 +677,7 @@ def checker_nocheck():
                  writer = csv.writer(f)
                  writer.writerow(["userid","dormitory_type","room"])
              #use=request.form.get(use)
-             print(nocheck)
+            #  print(nocheck)
              nocheck_l=list(nocheck)
              # 格納処理
              for j in range(0,len(nocheck)):
@@ -695,7 +695,7 @@ def checker_nocheck():
              #返却処理
              session['userid']=userid
              session['login_flag']=True
-             print(nocheck)
+            #  print(nocheck)
              return render_template("checker.2.html",today=now.strftime("%m/%d") ,userid=uid, dormitory_type=dorm, room=droom ,user=userid, uid_len=len(uid), datelist=datelist,date_len=int(len(datelist)),datelistdt=datelistdt)
 @app.route("/nocheckerdl",methods=["GET","POST"])
 def nocheckerdl():
@@ -707,7 +707,7 @@ def nocheckerdl():
      # ユーザID取得
      if session['login_flag']:
          userid = session['userid']
-         print(request)
+        #  print(request)
          if userid=="btcheck" or "call":
              return send_file("data/temp/noreport.csv", as_attachment = True, attachment_filename = "data/temp/noreport.csv", mimetype = "text/csv")
 if __name__ =="__main__":
