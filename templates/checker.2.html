@@ -15,7 +15,7 @@
                 <!-- <li><a href="/chpass">パスワード変更</a></li> -->
                 <li><a href="/logout">ログアウト</a></li>
             </ul>
-			<form action="/checker_chdate" method="POST" hidden>
+			<form action="/nochecker_chdate" method="POST" >
 				<select name="date-select">
 				{% for i in range(0,date_len,2) %}
 				{% if i+1>date_len %}

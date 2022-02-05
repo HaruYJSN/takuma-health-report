@@ -471,10 +471,10 @@ def checker_chdate():
              # 表に表示する情報をDBから取得
              #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
              sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
-             print("hogenyan"+str(request.form.get('date-select')))
+            #  print("hogenyan"+str(request.form.get('date-select')))
              if reqdate != int(len(datelist))-2:
                 reqdate=request.form.get('date-select')
-                print(reqdate)
+                # print(reqdate)
              else:
                  reqdate=int(len(datelist))-2
             #  if reqdate ==None:
@@ -630,11 +630,12 @@ def checker_nocheck():
              sql="SELECT userid,dormitory_type,room FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
              # 名簿情報を取得
              sql1="SELECT userid,dormitory_type,room FROM users ORDER BY dormitory_type,room "
+             
              cursor.execute(sql,reportable[i],reportable[i+1])
              result= cursor.fetchall()
              cursor.execute(sql1)
              result1=cursor.fetchall()
-             print(result)
+            #  print(result)
              # 提出者のIDと名簿の差分を算出
              r=["" for j in range(0,len(result))]
              r1=["" for j in range(0,len(result1))]
@@ -652,7 +653,7 @@ def checker_nocheck():
              for j in range(0,len(nocheck_l)):
                 cursor.execute(sql,nocheck_l[j])
                 nocheck=nocheck+cursor.fetchall()
-             print(nocheck_l)
+            #  print(nocheck_l)
              ## 型変換
              #r = [[""]*3 for j in range(0,len(result))]
              #r1 =[[""]*3 for j in range(0,len(result1))]
@@ -688,7 +689,7 @@ def checker_nocheck():
                 droom[j]=str(nocheck[j][2])
                 # 結果をcsvに
                 with open("data/temp/noreport.csv","a") as f:
-                    print("writing")
+                    # print("writing")
                     writer = csv.writer(f)
                     #if j==0:
                     #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
@@ -699,6 +700,115 @@ def checker_nocheck():
              session['login_flag']=True
             #  print(nocheck)
              return render_template("checker.2.html",today=now.strftime("%m/%d") ,userid=uid, dormitory_type=dorm, room=droom ,user=userid, uid_len=len(uid), datelist=datelist,date_len=int(len(datelist)),datelistdt=datelistdt)
+
+@app.route("/nochecker_chdate",methods=["GET","POST"])
+def nochecker_chdate():
+     now = datetime.datetime.now()
+     today = now.strftime("%Y_%m_%d ")
+     nowtime = now.strftime("%Y-%m-%d %H:%M:%S")
+     cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+password)
+     cursor=cnxn.cursor()
+     # ユーザID取得
+     if session['login_flag']:
+         global reqdate
+         userid = session['userid']
+         print(request)
+         if userid=="btcheck" or "call":
+             # 表に表示する情報をDBから取得
+             #sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY condition DESC,room,dormitory_type "
+             sql="SELECT userid,dormitory_type,room,body_temp,condition,date FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
+            #  # 最新の報告状況を取得
+            #  sql="SELECT userid,dormitory_type,room FROM report WHERE date BETWEEN ? AND ? ORDER BY dormitory_type,room "
+             # 名簿情報を取得
+             sql1="SELECT userid,dormitory_type,room FROM users ORDER BY dormitory_type,room "
+            #  print("hogenyan"+str(request.form.get('date-select')))
+             if reqdate != int(len(datelist))-2:
+                reqdate=request.form.get('date-select')
+                # print(reqdate)
+             else:
+                 reqdate=int(len(datelist))-2
+            #  if reqdate ==None:
+            #      reqdate=int(len(datelist))-2
+             cursor.execute(sql,datelist[int(reqdate)],datelist[int(reqdate)+1])
+            #  cursor.execute(sql,reportable[i],reportable[i+1])
+             result= cursor.fetchall()
+             cursor.execute(sql1)
+             result1=cursor.fetchall()
+             print(datelist[int(reqdate)])
+             print(datelist[int(reqdate)+1])
+             result= cursor.fetchall()
+             print(result)
+             
+             # 提出者のIDと名簿の差分を算出
+             r=["" for j in range(0,len(result))]
+             r1=["" for j in range(0,len(result1))]
+             for j in range(0,len(result)):
+                 r[j]=result[j][0]
+             for j in range(0,len(result1)):
+                 r1[j]=result1[j][0]
+
+             nocheck_l=set(r1) - set(r)
+             nocheck_l=list(nocheck_l)
+             nocheck=list()
+             print(nocheck_l)
+             #nocheck=["" for j in range(0,len(nocheck_l))]
+             # 未提出者のIDから部屋番号,寮を取得
+             sql="SELECT userid,dormitory_type,room FROM users WHERE userid= ? ORDER BY dormitory_type,room "
+             for j in range(0,len(nocheck_l)):
+                cursor.execute(sql,nocheck_l[j])
+                nocheck=nocheck+cursor.fetchall()
+            #  print(nocheck_l)
+             ## 型変換
+             #r = [[""]*3 for j in range(0,len(result))]
+             #r1 =[[""]*3 for j in range(0,len(result1))]
+             #
+             #for j in range(0,len(result)):
+             #    for k in range(0,2):
+             #        r[j][k]=str(result[j][k])
+             #for j in range(0,len(result1)):
+             #    for k in range(0,2):
+             #        r1[j][k]=str(result1[j][k])
+             ##r=list(result)
+             ##r1=list(result1)
+             #nocheck=set(r1)-set(r)
+             j=0
+             # 表に表示する情報を配列に格納
+             # 表に表示する情報を配列に格納
+             # 変数の宣言
+             uid = [""for j in range(0,len(nocheck))]
+             dorm = [""for j in range(0,len(nocheck))]
+             droom = [""for j in range(0,len(nocheck))]
+             i=0
+             arr = [[0 for i in range(0,5)] for j in range(0,len(result))]
+             with open("data/temp/noreport.csv","w") as f:
+                 writer = csv.writer(f)
+                 writer.writerow(["userid","dormitory_type","room"])
+             #use=request.form.get(use)
+            #  print(nocheck)
+             nocheck_l=list(nocheck)
+             # 格納処理
+             for j in range(0,len(nocheck)):
+                uid[j]=str(nocheck[j][0])
+                dorm[j]=str(nocheck[j][1])
+                droom[j]=str(nocheck[j][2])
+                # 結果をcsvに
+                with open("data/temp/noreport.csv","a") as f:
+                    # print("writing")
+                    writer = csv.writer(f)
+                    #if j==0:
+                    #    writer.writerow("userid","dormitory_type","room","temperature","condition","datetime")
+                    writer.writerow([uid[j],dorm[j],droom[j]])
+                use = None
+                # print(result[j])
+             #返却処理
+             session['userid']=userid
+             session['login_flag']=True
+             print(len(datelist))
+
+             #rend=render_template("checker.html",desired_time=1,userid=userid)
+             rend=make_response(render_template("checker.2.html",today=datelist[int(reqdate)] ,userid=uid, dormitory_type=dorm, room=droom, uid_len=len(uid),user=userid,datelist=datelist,date_len=int(len(datelist)),sel=int(reqdate)))
+             return rend
+
 @app.route("/nocheckerdl",methods=["GET","POST"])
 def nocheckerdl():
      now = datetime.datetime.now()
