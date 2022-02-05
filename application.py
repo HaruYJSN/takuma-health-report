@@ -736,7 +736,7 @@ def nochecker_chdate():
              result1=cursor.fetchall()
              print(datelist[int(reqdate)])
              print(datelist[int(reqdate)+1])
-             result= cursor.fetchall()
+            #  result= cursor.fetchall()
              print(result)
              
              # 提出者のIDと名簿の差分を算出
@@ -746,7 +746,7 @@ def nochecker_chdate():
                  r[j]=result[j][0]
              for j in range(0,len(result1)):
                  r1[j]=result1[j][0]
-
+             print(r)
              nocheck_l=set(r1) - set(r)
              nocheck_l=list(nocheck_l)
              nocheck=list()
